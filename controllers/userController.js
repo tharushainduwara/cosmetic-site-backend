@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.js"; 
 import bcrypt from "bcrypt";
 
+
 export function createUser (req,res){
 
     const hashedPassword = bcrypt.hashSync(req.body.password,10)
@@ -60,14 +61,21 @@ export function loginUser(req,res){
                             lastName: user.lastName,
                             role: user.role,
                             isEmailVerified: user.isEmailVerified
-                        },"jwt-secret"
+                        },process.env.JWT_SECRET
 
 
                     )
                     res.json(
                         {
                             message : "Login Successfull",
-                            token : token
+                            token : token,
+                            user : {
+                                email : user.email,
+                                firstName : user.firstName,
+                                lastName : user.lastName,
+                                role : user.role,
+                                isEmailVerified : user.isEmailVerified,
+                            }
                         
                         }
                     )
