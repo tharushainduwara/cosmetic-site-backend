@@ -167,7 +167,7 @@ export async function getOrders(req, res) {
   }
 }
 
-export async function updateOrderStatus() {
+export async function updateOrderStatus(req,res) {
   if (!isAdmin(req)) {
     res.status(403).json({
       message: "You are not authorized to update orders",
