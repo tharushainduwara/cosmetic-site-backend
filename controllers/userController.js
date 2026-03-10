@@ -151,12 +151,12 @@ export async function googleLogin(req, res) {
       let savedUser = await newUser.save();
       const jwtToken = jwt.sign(
         {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          role: user.role,
-          isEmailVerified: user.isEmailVerified,
-          image: user.image,
+          email: savedUser.email,
+          firstName: savedUser.firstName,
+          lastName: savedUser.lastName,
+          role: savedUser.role,
+          isEmailVerified: savedUser.isEmailVerified,
+          image: savedUser.image,
         },
         process.env.JWT_SECRET,
       );
