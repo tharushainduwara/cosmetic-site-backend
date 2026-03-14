@@ -133,3 +133,33 @@ export async function getProductsBySearch(req, res) {
     });
   }
 }
+
+export async function getProductsByCategory(req, res) {
+  try {
+    const category = req.params.category;
+
+    const products = await Product.find({
+      category: category
+    });
+
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Failed to filter products by category",
+    });
+  }
+}
+
+export async function getAllCategories(req, res) {
+  try {
+    // Get unique categories from the Product collection
+    const categories = await Product.distinct("category");
+    res.json(categories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Failed to fetch categories",
+    });
+  }
+}
