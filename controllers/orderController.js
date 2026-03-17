@@ -188,3 +188,49 @@ export async function updateOrderStatus(req,res) {
     });
   }
 }
+
+export async function getUserOrders(req, res) {
+  try {
+    const orders = await Order.find({ userID: req.user.id }).sort({
+      date: -1,
+    });
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
+}
+
+export async function cancelOrder(req, res) {
+  try {
+    const { orderID } = req.params;
+
+    const order = await Order.findOne({ orderID });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // 🔒 Only owner can cancel
+    if (order.userID !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // 🚫 Prevent cancelling completed/cancelled
+    if (
+      order.status === "completed" ||
+      order.status === "cancelled"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Order cannot be cancelled" });
+    }
+
+    order.status = "cancelled";
+    await order.save();
+
+    res.json({ message: "Order cancelled successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Cancel failed" });
+  }
+}
