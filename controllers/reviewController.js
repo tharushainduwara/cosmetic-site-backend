@@ -46,7 +46,6 @@ export async function getReviewsByProduct(req, res) {
   try {
     const reviews = await Review.find({
       productID: req.params.productID,
-      status: "approved",
     }).sort({ createdAt: -1 });
 
     // Average rating
